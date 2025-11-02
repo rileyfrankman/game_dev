@@ -16,15 +16,15 @@ public class Combat_Manager : MonoBehaviour
     }
 
     private CombatState currentState;
-      
-        private void Start()
+
+    private void Start()
     {
         InitializeCombat();
     }
 
-    private void InitializeCombat()
+    public void InitializeCombat()
     {
-        player = GameObject.Find("Player_Manager").GetComponent<Player>();
+        // player = GameObject.Find("Player_Manager").GetComponent<Player>();
         // enemy = findObjectOfType<Enemy>();
         currentState = CombatState.Start;
         player.deck.Shuffle();
@@ -86,14 +86,14 @@ public class Combat_Manager : MonoBehaviour
         }
     }
 
-    private void DrawCard(List<Card> deck, List<Card> hand)
-    {
-        if (deck.Count > 0)
-        {
-            hand.Add(deck[0]);
-            deck.RemoveAt(0);
-        }
-    }
+    // private void DrawCard(List<Card> deck, List<Card> hand)
+    // {
+    //     if (deck.Count > 0)
+    //     {
+    //         addCardToHand(deck[0]);
+    //         deck.RemoveAt(0);
+    //     }
+    // }
 
     // Check win/lose conditions
     private void CheckGameState()
@@ -108,4 +108,6 @@ public class Combat_Manager : MonoBehaviour
             currentState = CombatState.Defeat;
         }
     }
+
+
 }

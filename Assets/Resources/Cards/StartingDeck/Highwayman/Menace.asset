@@ -19,5 +19,6 @@ MonoBehaviour:
   staminaCost: 2
   buff: 0
   number: 2
-  sprite: {fileID: 0}
+  sprite: {fileID: 2680404118029729102, guid: 661d8442b48de43489b618e5eb3ae50d, type: 3}
   orderInDeck: 0
+  cardTransform: {fileID: 0}

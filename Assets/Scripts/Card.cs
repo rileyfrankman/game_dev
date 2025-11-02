@@ -16,4 +16,5 @@ public class Card : ScriptableObject
     public int number = 1;
     public Sprite sprite;
     public int orderInDeck = 0;
+    public Transform cardTransform;
 }

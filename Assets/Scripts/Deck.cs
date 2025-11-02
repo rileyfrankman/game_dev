@@ -8,7 +8,8 @@ public class Deck
     [SerializeField] public List<Card> deck;
     [SerializeField] private List<Card> discardPile;
     [SerializeField] private List<Card> hand;
-
+    private readonly float cardSpacing = 150f;
+    
     public void Shuffle()
     {
         List<Card> cards = new List<Card>();
@@ -16,13 +17,13 @@ public class Deck
         cards.AddRange(discardPile);
         deck.Clear();
         discardPile.Clear();
+        Debug.Log("shuffling");
 
         for (int i = 0; i < cards.Count; i++)
         {
-            Card temp = cards[i];
             int randomIndex = Random.Range(i, cards.Count);
-            cards[i] = cards[randomIndex];
-            cards[randomIndex] = temp;
+            deck.Add(cards[randomIndex]);
+            cards.RemoveAt(randomIndex);
         }
     }
 
@@ -34,7 +35,15 @@ public class Deck
         }
         Card drawnCard = deck[0];
         deck.RemoveAt(0);
-        hand.Add(drawnCard);
+        AddCardToHand(drawnCard);
     }
 
+    void AddCardToHand(Card card)
+    {
+        // Add card to hand logic
+        hand.Add(card);
+        int numberOfCardsInHand = hand.Count;
+        Vector3 cardPosition = new Vector3(-300 + cardSpacing * (numberOfCardsInHand - 1), -200, 0);
+        Card card_go = UnityEngine.Object.Instantiate(card, cardPosition, Quaternion.identity);
+    }
 }
