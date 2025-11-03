@@ -6,6 +6,7 @@ public class Combat_Manager : MonoBehaviour
     public Player player;
     public Enemy enemy;
     public Canvas rewardCanvas;
+    public Canvas BattleCanvas;
     public enum CombatState
     {
         Start,
@@ -79,7 +80,7 @@ public class Combat_Manager : MonoBehaviour
 
     private void DrawInitialHands()
     {
-        for (int i = 0; i < 5; i++)
+        for (int i = 0; i < 1; i++)
         {
             player.deck.DrawCard();
             // DrawCard(enemyDeck, enemyHand);
@@ -108,6 +109,4 @@ public class Combat_Manager : MonoBehaviour
             currentState = CombatState.Defeat;
         }
     }
-
-
 }

@@ -6,9 +6,8 @@ using System.Collections;
 public class Deck
 {
     [SerializeField] public List<Card> deck;
-    [SerializeField] private List<Card> discardPile;
-    [SerializeField] private List<Card> hand;
-    private readonly float cardSpacing = 150f;
+    [SerializeField] public List<Card> discardPile;
+    [SerializeField] public List<Card> hand;
     
     public void Shuffle()
     {
@@ -35,15 +34,17 @@ public class Deck
         }
         Card drawnCard = deck[0];
         deck.RemoveAt(0);
-        AddCardToHand(drawnCard);
+        // AddCardToHand(drawnCard);
     }
 
-    void AddCardToHand(Card card)
-    {
-        // Add card to hand logic
-        hand.Add(card);
-        int numberOfCardsInHand = hand.Count;
-        Vector3 cardPosition = new Vector3(-300 + cardSpacing * (numberOfCardsInHand - 1), -200, 0);
-        Card card_go = UnityEngine.Object.Instantiate(card, cardPosition, Quaternion.identity);
-    }
+    // void AddCardToHand(Card card)
+    // {
+    //     // Add card to hand logic
+    //     hand.Add(card);
+    //     int numberOfCardsInHand = hand.Count;
+    //     Vector3 cardPosition = new Vector3(-300 + cardSpacing * (numberOfCardsInHand - 1), -200, 0);
+        
+    //     gameObject card_go = UnityEngine.Object.Instantiate(card_go, cardPosition, Quaternion.identity);
+    //     // gameO card_go = UnityEngine.Object.Instantiate(card, cardPosition, Quaternion.identity);
+    // }
 }

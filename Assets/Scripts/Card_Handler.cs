@@ -8,14 +8,12 @@ public class Card_Handler : MonoBehaviour
     public TMPro.TextMeshProUGUI cardEffectText;
     public SpriteRenderer cardBackgroundRenderer;
     // Start is called once before the first execution of Update after the MonoBehaviour is created
-    void Start()
+    public void InitializeCard(Card card, GameObject cardObject)
     {
-        
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
-        
+        cardData = card;
+        cardSpriteRenderer.sprite = card.sprite;
+        cardNameText.text = card.name;
+        cardEffectText.text = card.effect;
+        // You can set other UI elements similarly
     }
 }
