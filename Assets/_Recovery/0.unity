@@ -2098,6 +2098,8 @@ MonoBehaviour:
   enemy: {fileID: 1829292762}
   rewardCanvas: {fileID: 1664515007}
   BattleCanvas: {fileID: 2060602728}
+  worldMap: {fileID: 1769174232}
+  cardPrefab: {fileID: 3205585020606410343, guid: ac6b56220bd383a418ce50fb5115beaa, type: 3}
 --- !u!114 &2060602731
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2105,13 +2107,12 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2060602725}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 915b4760fb4a6874d9d56f2e8fbed532, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Combat_UI
   player: {fileID: 1801796415}
-  cardPrefab: {fileID: 3205585020606410343, guid: ac6b56220bd383a418ce50fb5115beaa, type: 3}
 --- !u!1 &2119682203
 GameObject:
   m_ObjectHideFlags: 0

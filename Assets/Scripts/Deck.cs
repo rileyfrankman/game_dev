@@ -25,26 +25,4 @@ public class Deck
             cards.RemoveAt(randomIndex);
         }
     }
-
-    public void DrawCard()
-    {
-        if (deck.Count == 0)
-        {
-            Shuffle();
-        }
-        Card drawnCard = deck[0];
-        deck.RemoveAt(0);
-        // AddCardToHand(drawnCard);
-    }
-
-    // void AddCardToHand(Card card)
-    // {
-    //     // Add card to hand logic
-    //     hand.Add(card);
-    //     int numberOfCardsInHand = hand.Count;
-    //     Vector3 cardPosition = new Vector3(-300 + cardSpacing * (numberOfCardsInHand - 1), -200, 0);
-        
-    //     gameObject card_go = UnityEngine.Object.Instantiate(card_go, cardPosition, Quaternion.identity);
-    //     // gameO card_go = UnityEngine.Object.Instantiate(card, cardPosition, Quaternion.identity);
-    // }
 }
