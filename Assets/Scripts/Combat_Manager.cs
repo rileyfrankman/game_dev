@@ -4,11 +4,14 @@ using System.Collections.Generic;
 public class Combat_Manager : MonoBehaviour
 {
     public Player player;
-    public Enemy enemy;
+    
+    public GameObject enemyPrefab;
+    private Enemy enemy;
     public Canvas rewardCanvas;
     public Canvas BattleCanvas;
     public Canvas worldMap;
-    private readonly float cardSpacing = 150f;
+    private readonly float cardSpacing = 300f;
+    Vector3 enemyPosition = new Vector3(960, 800, 0);
     
     public GameObject cardPrefab;
     public enum CombatState
@@ -24,13 +27,18 @@ public class Combat_Manager : MonoBehaviour
 
     private void Start()
     {
+        BattleCanvas.enabled = false;
     }
 
     public void InitializeCombat()
     {
         // player = GameObject.Find("Player_Manager").GetComponent<Player>();
         // enemy = findObjectOfType<Enemy>();
+
+        GameObject enemyObject = GameObject.Instantiate(enemyPrefab, enemyPosition, Quaternion.identity) as GameObject;        
+        enemy = enemyObject.GetComponent<Enemy>();
         worldMap.enabled = false;
+        BattleCanvas.enabled = true;
         currentState = CombatState.Start;
         player.deck.Shuffle();
         // ShuffleDeck(enemyDeck);
@@ -84,7 +92,7 @@ public class Combat_Manager : MonoBehaviour
 
     private void DrawInitialHands()
     {
-        for (int i = 0; i < 1; i++)
+        for (int i = 0; i < 5; i++)
         {
             DrawCard();
             // DrawCard(enemyDeck, enemyHand);
@@ -131,7 +139,7 @@ public class Combat_Manager : MonoBehaviour
         int numberOfCardsInHand = player.deck.hand.Count;
         // GameObject cardObject = new GameObject();
         // Instantiate(cardObject);
-        Vector3 cardPosition = new Vector3(-300 + cardSpacing * (numberOfCardsInHand - 1), -200, 0);
+        Vector3 cardPosition = new Vector3(1500 - cardSpacing * (numberOfCardsInHand - 1), 300, 0);
         GameObject cardObject = GameObject.Instantiate(cardPrefab, cardPosition, Quaternion.identity) as GameObject;
         cardObject.GetComponent<Card_Handler>().InitializeCard(card, cardObject);
         // gameO card_go = UnityEngine.Object.Instantiate(card, cardPosition, Quaternion.identity);
