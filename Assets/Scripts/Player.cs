@@ -1,6 +1,7 @@
 using UnityEngine;
 using System.Collections.Generic;
 using System.Collections;
+using TMPro;
 
 public class Player : Entity
 {
@@ -8,6 +9,9 @@ public class Player : Entity
     public int gold;
     private string className = "Highwayman";
     public Deck deck = new Deck();
+    public Canvas playerUICanvas;
+    public TMPro.TextMeshProUGUI playerGoldText;
+    public TMPro.TextMeshProUGUI playerHealthText;
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
@@ -25,6 +29,9 @@ public class Player : Entity
                 deck.deck.Add(card);
             }
         }
+        
+        playerUICanvas.enabled = true;
+
     }
     void Awake()
     {
@@ -39,5 +46,8 @@ public class Player : Entity
             Destroy(gameObject);
             dead = true;
         }
+        playerUICanvas.enabled = !dead;
+        playerGoldText.text = "Gold: " + gold;
+        playerHealthText.text = "Health: " + health;
     }
 }
