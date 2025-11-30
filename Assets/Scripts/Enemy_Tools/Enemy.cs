@@ -5,7 +5,12 @@ public class Enemy : Entity
 {
     public bool dead;    
     public List<Card> Deck = new List<Card>(); // A list of ScriptableObject Deck
-    // string name = "Goblin"; // Default enemy name
+    string enemyName = "Goblin"; // Default enemy name
+    
+    public Canvas enemyUICanvas;
+    public TMPro.TextMeshProUGUI enemyIntentText;
+    public TMPro.TextMeshProUGUI enemyHealthText;
+    public TMPro.TextMeshProUGUI enemyNameText;
 
     
     void LoadDeck(string enemyName)
@@ -40,6 +45,11 @@ public class Enemy : Entity
             Destroy(gameObject);
             dead = true;
         }
+        
+        enemyUICanvas.enabled = !dead;
+        enemyNameText.text = enemyName;
+        enemyHealthText.text = "Health: " + health;
+        enemyIntentText.text = "Attack 3";
     }
 }
 
