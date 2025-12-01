@@ -504,6 +504,7 @@ MonoBehaviour:
   cardSpriteRenderer: {fileID: 1339614470529412113}
   cardNameText: {fileID: 3606315282606344944}
   cardEffectText: {fileID: 7712678025614815245}
+  cardCostText: {fileID: 1722368495281237003}
   cardBackgroundRenderer: {fileID: 8598122620608554403}
   cardCanvas: {fileID: 2723206922994192881}
 --- !u!61 &8189593370217048826

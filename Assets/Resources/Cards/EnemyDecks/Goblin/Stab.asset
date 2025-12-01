@@ -10,20 +10,15 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 008868ff8fc890d4c9e5c74aba63d35a, type: 3}
-  m_Name: Slink Away
+  m_Name: Stab
   m_EditorClassIdentifier: Assembly-CSharp::Card
   id: 0
-  damage: 0
-  effect: hide
-  block: 2
-  heal: 0
-  staminaCost: 0
+  damage: 2
+  effect: critical
+  block: 0
+  staminaCost: 1
   buff: 0
-  number: 2
-  sprite: {fileID: -5538084447123883578, guid: addc09b7262e0364890e18d685fb0791, type: 3}
+  number: 3
+  sprite: {fileID: -836089490739333967, guid: a0d2850c8e64bf64c8a39693b22485ad, type: 3}
   orderInDeck: 0
   cardTransform: {fileID: 0}
-  attackFlag: 0
-  blockFlag: 1
-  healFlag: 0
-  buffFlag: 0

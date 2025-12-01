@@ -14,11 +14,16 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::Card
   id: 0
   damage: 0
-  effect: Slow
+  effect: slow
   block: 4
+  heal: 0
   staminaCost: 1
   buff: 0
   number: 2
   sprite: {fileID: 3196887935307818736, guid: e939364cd80f4274da587a99f8bf3470, type: 3}
   orderInDeck: 0
   cardTransform: {fileID: 0}
+  attackFlag: 0
+  blockFlag: 1
+  healFlag: 0
+  buffFlag: 0

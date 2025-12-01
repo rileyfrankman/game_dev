@@ -1,5 +1,6 @@
 using UnityEngine;
 using System.Collections.Generic;
+using System.Threading;
 
 public class Combat_Manager : MonoBehaviour
 {
@@ -8,11 +9,16 @@ public class Combat_Manager : MonoBehaviour
     public GameObject enemyPrefab;
     private Enemy enemy;
     public Canvas rewardCanvas;
-    public Canvas BattleCanvas;
+    public Canvas battleCanvas;
     public Canvas worldMap;
+    public GameObject enemyObject;
+    public GameObject playerObject;
     private readonly float cardSpacing = 300f;
     Vector3 enemyPosition = new Vector3(960, 800, 0);
+    bool beginningOfTurn = true;
+    public GameObject handManager;
     
+    // private bool cardPlayable = false;
     public GameObject cardPrefab;
     public enum CombatState
     {
@@ -20,29 +26,29 @@ public class Combat_Manager : MonoBehaviour
         PlayerTurn,
         EnemyTurn,
         Victory,
-        Defeat
+        Defeat,
+        OutOfCombat
     }
 
     private CombatState currentState;
 
     private void Start()
     {
-        BattleCanvas.enabled = false;
+        currentState = CombatState.OutOfCombat;
+        battleCanvas.enabled = false;
     }
 
     public void InitializeCombat()
     {
         // player = GameObject.Find("Player_Manager").GetComponent<Player>();
-        // enemy = findObjectOfType<Enemy>();
 
-        GameObject enemyObject = GameObject.Instantiate(enemyPrefab, enemyPosition, Quaternion.identity) as GameObject;        
+        enemyObject = GameObject.Instantiate(enemyPrefab, enemyPosition, Quaternion.identity) as GameObject;        
         enemy = enemyObject.GetComponent<Enemy>();
         worldMap.enabled = false;
-        BattleCanvas.enabled = true;
+        battleCanvas.enabled = true;
         currentState = CombatState.Start;
         player.deck.Shuffle();
-        // ShuffleDeck(enemyDeck);
-        DrawInitialHands();
+        enemy.deck.Shuffle();
         currentState = CombatState.PlayerTurn;
     }
 
@@ -63,66 +69,79 @@ public class Combat_Manager : MonoBehaviour
                 HandleDefeat();
                 break;
         }
+        if (currentState != CombatState.OutOfCombat)
+        {
+            CheckGameState();            
+        }
     }
 
     private void HandlePlayerTurn()
     {
-        // Handle player card selection and playing
-        // This would be implemented based on your input system
+        if (beginningOfTurn)
+        { 
+            if (player.deck.hand.Count != 0)
+            {
+                player.deck.DiscardHand();
+                CleanUpHand();
+            }
+            DrawHands();
+            Debug.Log("Player's Turn Begins");
+            player.stamina = player.staminaMax;
+            beginningOfTurn = false;
+        }
+        // cardPlayable = true;
     }
 
     private void HandleEnemyTurn()
     {
         // AI logic for enemy turn
+        Debug.Log("Enemy is attacking...");
+        Thread.Sleep(500); // Simulate time taken for enemy action
+        enemy.PerformCard(enemyObject, ref playerObject,enemy.deck.hand[0]);
+        
         // After enemy turn completes:
+        enemy.deck.discardPile.Add(enemy.deck.hand[0]);
+        enemy.deck.hand.RemoveAt(0);
         currentState = CombatState.PlayerTurn;
+        beginningOfTurn = true;
+        UpdateConditions();
     }
 
     private void HandleVictory()
     {
         Debug.Log("Player Wins!");
         // Add victory logic
+        rewardCanvas.enabled = true;
+        EndCombat();
     }
 
     private void HandleDefeat()
     {
         Debug.Log("Player Loses!");
         // Add defeat logic
+        EndCombat();
     }
 
-    private void DrawInitialHands()
+    private void DrawHands()
     {
-        for (int i = 0; i < 5; i++)
+        EnemyDrawCard();
+        for (int i = 0; i < player.handSize; i++)
         {
             DrawCard();
-            // DrawCard(enemyDeck, enemyHand);
         }
     }
-
-    // private void DrawCard(List<Card> deck, List<Card> hand)
-    // {
-    //     if (deck.Count > 0)
-    //     {
-    //         addCardToHand(deck[0]);
-    //         player.deck.RemoveAt(0);
-    //     }
-    // }
-
-    // Check win/lose conditions
-    private void CheckGameState()
+    public void EnemyDrawCard()
     {
-        if (enemy.health <= 0)
+        if (enemy.deck.deck.Count == 0)
         {
-            currentState = CombatState.Victory;
-            rewardCanvas.enabled = true;
+            enemy.deck.Shuffle();
         }
-        else if (player.health <= 0)
-        {
-            currentState = CombatState.Defeat;
-        }
+        Debug.Log("Number of cards in enemy deck before draw: " + enemy.deck.deck.Count);
+        Card drawnCard = enemy.deck.deck[0];
+        enemy.deck.deck.RemoveAt(0);
+        enemy.deck.hand.Add(drawnCard);
     }
-
-        public void DrawCard()
+    public void DrawCard()
     {
         if (player.deck.deck.Count == 0)
         {
@@ -132,16 +151,66 @@ public class Combat_Manager : MonoBehaviour
         player.deck.deck.RemoveAt(0);
         AddCardToHand(drawnCard);
     }
-        private void AddCardToHand(Card card)
+    private void AddCardToHand(Card card)
     {
         // Add card to hand logic
         player.deck.hand.Add(card);
         int numberOfCardsInHand = player.deck.hand.Count;
-        // GameObject cardObject = new GameObject();
-        // Instantiate(cardObject);
+
         Vector3 cardPosition = new Vector3(1500 - cardSpacing * (numberOfCardsInHand - 1), 300, 0);
         GameObject cardObject = GameObject.Instantiate(cardPrefab, cardPosition, Quaternion.identity) as GameObject;
+        cardObject.transform.SetParent(handManager.transform, false);
         cardObject.GetComponent<Card_Handler>().InitializeCard(card, cardObject);
-        // gameO card_go = UnityEngine.Object.Instantiate(card, cardPosition, Quaternion.identity);
+    }
+    public void CleanUpHand()
+    {
+        foreach (Transform child in handManager.transform)
+        {
+            GameObject.Destroy(child.gameObject);
+        }
+    }
+    public void EndPlayerTurn()
+    {
+        // cardPlayable = false;
+        currentState = CombatState.EnemyTurn;
+    }
+    public void UpdateConditions()
+    {
+        enemy.block = 0;
+        player.block = 0;   
+        if (player.buff>0)
+        {
+            player.buff -= 1;
+        }
+        else if(player.buff<0)
+        {
+            player.buff +=1;    
+        }
+
+        if (enemy.buff>0)
+        {
+            enemy.buff -= 1;
+        }
+        else if(enemy.buff<0)
+        {
+            enemy.buff +=1;    
+        }
+    }
+    public void CheckGameState()
+    {
+        if (enemy.health <= 0)
+        {
+            currentState = CombatState.Victory;
+        }
+        else if (player.health <= 0)
+        {
+            currentState = CombatState.Defeat;
+        }
+    }
+    public void EndCombat()
+    {
+        currentState = CombatState.OutOfCombat;
+        battleCanvas.enabled = false;
+        beginningOfTurn = true;
     }
 }
