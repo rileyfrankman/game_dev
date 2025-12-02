@@ -21,4 +21,5 @@ public class Card : ScriptableObject
     public bool blockFlag = false; 
     public bool healFlag = false; 
     public bool buffFlag = false; 
+    public string cardText = "Default Card Text";
 }

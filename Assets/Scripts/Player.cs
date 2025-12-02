@@ -8,6 +8,7 @@ public class Player : Entity
     public bool dead;
     public int gold;
     public int staminaMax = 3;
+    public int staminaMaxTemp = 3;
     public int stamina = 3;
     public int handSize = 5;
     private string className = "Highwayman";

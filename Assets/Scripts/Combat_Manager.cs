@@ -86,7 +86,13 @@ public class Combat_Manager : MonoBehaviour
             }
             DrawHands();
             Debug.Log("Player's Turn Begins");
-            player.stamina = player.staminaMax;
+            player.stamina = player.staminaMaxTemp - player.stun;
+            player.staminaMaxTemp = player.staminaMax;
+            
+            if (player.stun > 0)
+            {
+                player.stun -= 1;
+            }
             beginningOfTurn = false;
         }
         // cardPlayable = true;
@@ -97,7 +103,14 @@ public class Combat_Manager : MonoBehaviour
         // AI logic for enemy turn
         Debug.Log("Enemy is attacking...");
         Thread.Sleep(500); // Simulate time taken for enemy action
-        enemy.PerformCard(enemyObject, ref playerObject,enemy.deck.hand[0]);
+        if (enemy.stun > 0)
+        {
+            Debug.Log("Enemy is stunned and skips its turn.");
+        }
+        else
+        {    
+            enemy.PerformCard(enemyObject, ref playerObject,enemy.deck.hand[0]);
+        }
         
         // After enemy turn completes:
         enemy.deck.discardPile.Add(enemy.deck.hand[0]);
@@ -194,6 +207,14 @@ public class Combat_Manager : MonoBehaviour
         else if(enemy.buff<0)
         {
             enemy.buff +=1;    
+        }
+        if (player.hide > 0)
+        {
+            player.hide -= 1;
+        }
+        if (enemy.hide > 0)
+        {
+            enemy.hide -= 1;
         }
     }
     public void CheckGameState()

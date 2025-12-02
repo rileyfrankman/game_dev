@@ -6,6 +6,8 @@ public class Entity : MonoBehaviour
     public int buff = 0;
     public int block = 0;
     public Deck deck = new Deck();
+    public int hide = 0;
+    public int stun = 0;
         
         
     public void PerformCard(GameObject attacker, ref GameObject target, Card action)
@@ -19,25 +21,27 @@ public class Entity : MonoBehaviour
         {
             buff += action.buff;
             Debug.Log(attacker.name + " buffs themselves for " + action.buff + ". New buff: " + buff);
+            HandleEffects(action, attacker, target);
             return;
         }
         if (action.healFlag)
         {
             GainHealth(ref attacker.GetComponent<Entity>().health, action.heal);
             Debug.Log(attacker.name + " heals for " + action.heal + ". New health: " + attacker.GetComponent<Entity>().health);
+            HandleEffects(action, attacker, target);
             return;
         }
         if (action.blockFlag)
         {
             attacker.GetComponent<Entity>().block += action.block;
             Debug.Log(attacker.name + " gains " + action.block + " block. New block: " + attacker.GetComponent<Entity>().block);
+            HandleEffects(action, attacker, target);
             return;
         }
         if (action.attackFlag)
         {
-            int damage = action.damage + attacker.GetComponent<Entity>().buff;
+            int damage = action.damage + attacker.GetComponent<Entity>().buff  - target.GetComponent<Entity>().hide;
             int block = target.GetComponent<Entity>().block;
-            bool stealflag = action.effect == "steal";
             switch (action.effect)
             {
                 case "critical":
@@ -72,6 +76,7 @@ public class Entity : MonoBehaviour
             }
             target.GetComponent<Entity>().block = block;
             
+            HandleEffects(action, attacker, target, damage);
             TakeDamage(ref target.GetComponent<Entity>().health, damage);
         }
         if (!action.attackFlag && !action.blockFlag && !action.healFlag && !action.buffFlag)
@@ -84,5 +89,27 @@ public class Entity : MonoBehaviour
             Debug.Log(attacker.name + " uses " + action.staminaCost + " stamina. Remaining stamina: " + attacker.GetComponent<Player>().stamina);
         }
     }
-    
+    private void HandleEffects(Card action, GameObject attacker, GameObject target, int damageDealt = 0)
+    {
+        
+        bool stealflag = action.effect == "steal";
+        if (stealflag && damageDealt > 0 && attacker.GetComponent<Player>() != null)
+        {
+            int stealAmount = Mathf.FloorToInt(damageDealt / 2);
+            attacker.GetComponent<Player>().gold += stealAmount;
+            Debug.Log(attacker.name + " steals " + stealAmount + " health from " + target.name + ". New health: " + attacker.GetComponent<Entity>().health);
+        }        
+        if (action.effect == "slow")
+        {
+            attacker.GetComponent<Entity>().stun += 1;
+        }
+        if (action.effect == "stun")
+        {
+            target.GetComponent<Entity>().stun += 1;
+        }
+        if (action.effect == "hide")
+        {
+            attacker.GetComponent<Entity>().hide += 1;
+        }
+    }    
 }

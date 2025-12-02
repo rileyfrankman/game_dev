@@ -28,9 +28,32 @@ public class Card_Handler : MonoBehaviour, IBeginDragHandler, IDragHandler, IEnd
         cardData = card;
         cardSpriteRenderer.sprite = card.sprite;
         cardNameText.text = card.name;
-        cardEffectText.text = card.effect;
         cardCostText.text = card.staminaCost.ToString();
-        // You can set other UI elements similarly
+        
+        if (card.effect != "None")
+        {
+        cardEffectText.text = card.effect.ToString() + "\n";
+        }
+        if (card.attackFlag)
+        {
+            cardBackgroundRenderer.color = Color.red;
+            cardEffectText.text += "Deal " + card.damage.ToString() + " damage to the target.";
+        }
+        else if (card.blockFlag)
+        {
+            cardBackgroundRenderer.color = Color.blue;
+            cardEffectText.text += "Gain " + card.block.ToString() + " block.";
+        }
+        else if (card.healFlag)
+        {
+            cardBackgroundRenderer.color = Color.green;
+            cardEffectText.text += "Gain " + card.heal.ToString() + " health.";
+        }
+        else if (card.buffFlag)
+        {
+            cardBackgroundRenderer.color = Color.yellow;
+            cardEffectText.text += "Gain " + card.buff.ToString() + " buff.";
+        }
 
     }
 
