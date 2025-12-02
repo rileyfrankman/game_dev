@@ -23,4 +23,9 @@ public class Continue_Button : MonoBehaviour
             rewardCanvas.enabled = false;
         }
     }
+    public void GameOverClick()
+    {
+        Debug.Log("Game Over Continue Button Clicked!");
+        SceneManager.LoadScene("Main");
+    }
 }

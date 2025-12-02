@@ -7,20 +7,53 @@ public class Card_Handler : MonoBehaviour, IBeginDragHandler, IDragHandler, IEnd
     public SpriteRenderer cardSpriteRenderer;
     public TMPro.TextMeshProUGUI cardNameText;
     public TMPro.TextMeshProUGUI cardEffectText;
+    public TMPro.TextMeshProUGUI cardCostText;
     public SpriteRenderer cardBackgroundRenderer;
+    private Player player;
+    private GameObject enemy;
+    private GameObject playerObject;
     private Transform originalParent;
     public Canvas cardCanvas;
     private Vector3 originalPosition;
     private bool inPlayArea = false;
     
+    public void Awake()
+    {
+        player = GameObject.Find("Player_Manager").GetComponent<Player>();
+        playerObject = GameObject.Find("Player_Manager");
+    }
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     public void InitializeCard(Card card, GameObject cardObject)
     {
         cardData = card;
         cardSpriteRenderer.sprite = card.sprite;
         cardNameText.text = card.name;
-        cardEffectText.text = card.effect;
-        // You can set other UI elements similarly
+        cardCostText.text = card.staminaCost.ToString();
+        
+        if (card.effect != "None")
+        {
+        cardEffectText.text = card.effect.ToString() + "\n";
+        }
+        if (card.attackFlag)
+        {
+            cardBackgroundRenderer.color = Color.red;
+            cardEffectText.text += "Deal " + card.damage.ToString() + " damage to the target.";
+        }
+        else if (card.blockFlag)
+        {
+            cardBackgroundRenderer.color = Color.blue;
+            cardEffectText.text += "Gain " + card.block.ToString() + " block.";
+        }
+        else if (card.healFlag)
+        {
+            cardBackgroundRenderer.color = Color.green;
+            cardEffectText.text += "Gain " + card.heal.ToString() + " health.";
+        }
+        else if (card.buffFlag)
+        {
+            cardBackgroundRenderer.color = Color.yellow;
+            cardEffectText.text += "Gain " + card.buff.ToString() + " buff.";
+        }
 
     }
 
@@ -50,11 +83,16 @@ public class Card_Handler : MonoBehaviour, IBeginDragHandler, IDragHandler, IEnd
         // Optional: Add logic for when dragging ends
         this.transform.SetParent(originalParent); // Return to original parent
         cardCanvas.sortingOrder = 0; // Reset sorting order
-        if (inPlayArea)
+        if (inPlayArea && player.stamina >= cardData.staminaCost)
         {
+            
+            enemy = GameObject.Find("Enemy(Clone)");
             Debug.Log("Card played: " + cardData.name);
             // Add logic for playing the card
-            // Destroy(this.gameObject); // Remove card from hand after playing
+            player.PerformCard(playerObject, ref enemy,this.cardData);
+            player.deck.discardPile.Add(cardData);
+            player.deck.hand.Remove(cardData);
+            Destroy(this.gameObject); // Remove card from hand after playing
         }
         else
         {

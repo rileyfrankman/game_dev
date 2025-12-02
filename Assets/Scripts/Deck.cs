@@ -18,11 +18,16 @@ public class Deck
         discardPile.Clear();
         Debug.Log("shuffling");
 
-        for (int i = 0; i < cards.Count; i++)
+        while (cards.Count > 0)
         {
-            int randomIndex = Random.Range(i, cards.Count);
+            int randomIndex = Random.Range(0, cards.Count);
             deck.Add(cards[randomIndex]);
             cards.RemoveAt(randomIndex);
         }
+    }
+    public void DiscardHand()
+    {
+        discardPile.AddRange(hand);
+        hand.Clear();
     }
 }

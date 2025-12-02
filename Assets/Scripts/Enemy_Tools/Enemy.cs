@@ -1,10 +1,11 @@
 using System.Collections.Generic; // Required for using List
 using UnityEngine;
+using System.Collections;
 
 public class Enemy : Entity
 {
     public bool dead;    
-    public List<Card> Deck = new List<Card>(); // A list of ScriptableObject Deck
+    // public List<Card> deck = new List<Card>(); // A list of ScriptableObject Deck
     string enemyName = "Goblin"; // Default enemy name
     
     public Canvas enemyUICanvas;
@@ -13,27 +14,25 @@ public class Enemy : Entity
     public TMPro.TextMeshProUGUI enemyNameText;
 
     
-    void LoadDeck(string enemyName)
+    void LoadDeck()
     {
-        // Clear the current list of attacks
-        // Deck.Clear();
-
-        // // Load all Card ScriptableObjects from the Resources/Deck folder
-        // Card[] Deck = Resources.LoadAll<Card>("Goblin_Deck");
-     
-        // For demonstration, we'll add all loaded attacks to the enemy's attack list
-        // foreach (Card card in Deck)
-        // {
-        //     Deck.Add(card);
-        //     Debug.Log("Loaded attack: " + Card.name + " for enemy: " + enemyName);
-        // }
+        Debug.Log("Loading enemy deck from Cards/EnemyDecks/" + enemyName);
+        Card[] startingCards = Resources.LoadAll<Card>("Cards/EnemyDecks/" + enemyName);
+        foreach (Card card in startingCards)
+        {
+            for (int i = 0; i < card.number; i++)
+            {
+                deck.deck.Add(card);
+            }
+        }
+        deck.Shuffle();
     }
     // Start is called once before the first execution of Update after the MonoBehaviour is created
-    void Start()
+    void Awake()
     {
         health = 10;
         dead = false;
-        // LoadDeck(Enemy.name);
+        LoadDeck();
     }
 
     // Update is called once per frame
@@ -46,10 +45,27 @@ public class Enemy : Entity
             dead = true;
         }
         
-        enemyUICanvas.enabled = !dead;
         enemyNameText.text = enemyName;
-        enemyHealthText.text = "Health: " + health;
-        enemyIntentText.text = "Attack 3";
+        if (block > 0)
+        {
+            enemyHealthText.text = "Health: " + health + " (Block: " + block + ")";
+        }
+        else
+        {
+            enemyHealthText.text = "Health: " + health;    
+        }
+
+        if (deck.hand.Count > 0)
+        {
+            if(deck.hand[0].attackFlag)
+                enemyIntentText.text = "Intent: " + deck.hand[0].name + " (Damage: " + deck.hand[0].damage + ")";
+            else if(deck.hand[0].blockFlag)
+                enemyIntentText.text = "Intent: " + deck.hand[0].name + " (Block: " + deck.hand[0].block + ")";
+            else if(deck.hand[0].healFlag)
+                enemyIntentText.text = "Intent: " + deck.hand[0].name + " (Heal: " + deck.hand[0].heal + ")";
+        }
+
+        enemyUICanvas.enabled = !dead;
     }
 }
 

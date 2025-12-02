@@ -12,10 +12,5 @@ public class Spawner : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if(spawn == true)
-        {
-            Instantiate(Resources.Load<GameObject>("Prefabs/Enemy"), new Vector3(0, 0, 0), Quaternion.identity);
-            spawn = false;  
-        }
     }
 }
